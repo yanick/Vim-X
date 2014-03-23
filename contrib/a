@@ -1,0 +1,12 @@
+sub foo {
+    bar(@_);
+}
+
+sub bar {
+    return wantarray ? 'array': 'npt';
+}
+
+use 5.16.0;
+
+say bar();
+say scalar bar();

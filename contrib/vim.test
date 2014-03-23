@@ -1,0 +1,5 @@
+perl push @INC, './lib'
+
+perl do 'test.vim'
+
+qall!

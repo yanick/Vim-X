@@ -11,6 +11,8 @@ our @EXPORT = qw/
     vim_command
     vim_call
     vim_lines
+    vim_append
+    vim_range
 vim_delete /;
 
 
@@ -34,9 +36,11 @@ sub Vim :ATTR_SUB {
 
     my $args = $attr_data eq 'args' ? '...' : undef;
 
+    my $range = 'range' x ( $attr_data =~ /range/ );
+
     no strict 'refs';
     VIM::DoCommand(<<END);
-function $name($args)
+function $name($args) $range
     perl ${class}::$name( split "\\n", scalar VIM::Eval('a:000'))
 endfunction
 END
@@ -94,6 +98,27 @@ sub vim_lines {
     vim_buffer->lines(@_);
 }
 
+sub vim_append {
+    vim_cursor()->append(@_);
+}
+
+sub vim_eval {
+    return map { scalar VIM::Eval($_) } @_;
+}
+
+sub vim_range {
+    my( $min, $max ) = map { vim_eval($_) } qw/ a:firstline a:lastline /;
+    warn $min, " ", $max;
+
+    if( @_ ) {
+        vim_buffer->[1]->Delete( $min, $max );
+        vim_buffer->line($min)->append(@_);
+        return;
+    }
+
+    return vim_lines( $min..$max );
+}
+
 sub vim_func {
     my $name = shift;
     my $sub = pop;
@@ -105,11 +130,12 @@ sub vim_func {
 
     my $args = $args{args} ? '...' : undef;
 
+    my $range = 'range' x $args =~ /range/;
 
     no strict 'refs';
     *{"::$name"} = $sub;
     VIM::DoCommand(<<END);
-function $name($args)
+function $name($args) $range
     perl ::$name( split "\\n", scalar VIM::Eval('a:000'))
 endfunction
 END
@@ -204,88 +230,6 @@ sub lines {
 sub size {
     my $self = shift;
     $self->[1]->Count;
-}
-
-package Vim::X::Line;
-
-use overload
-    '""' => sub { $_[0]->content },
-    '<<=' => sub { $_[0]->[0]->Set( $_[0]->[1], $_[1] ) },
-    '0+' => sub { return $_[0]->number },
-    '+' => sub { return $_[0]->number + $_[1] },
-    '<=>' => sub { 
-            return  $_[0]->number <=>  (ref $_[1] ? $_[1]->number : $_[1])
-        },
-    ;
-
-sub buffer  { $_[0]->[0] }
-sub number  { $_[0]->[1] }
-sub content { 
-    my $self = shift; 
-    $self->buffer->[1]->Get( $self->number ) 
-} 
-
-sub new {
-    my( $class, $buf, $i ) = @_;
-    my $self = [ $buf, $i ];
-    return bless $self, $class;
-}
-
-sub clone {
-    my $self = shift;
-    return Vim::X::Line->new( @$self );
-}
-
-sub dec {
-    my $self = shift;
-
-    return if $self->[1] == 1;
-
-    $self->[1] = $self->[1] -1;
-    return $self;
-}
-
-sub inc {
-    my $self = shift;
-
-    return if $self->[1] == $self->buffer->size;
-
-    ++$self->[1];
-    return $self;
-}
-
-sub rewind {
-    my( $self, $condition ) = @_;
-
-    my $target = Vim::X::Line->new(@$self);
-    while ( $target !~ $condition ) {
-        $target->dec or return;
-    }
-
-    $self->[1] = $target->[1];
-    return $self;
-}
-
-sub ff {
-    my( $self, $condition ) = @_;
-
-    my $target = Vim::X::Line->new(@$self);
-
-    while ( $target !~ $condition ) {
-        $target->inc or return;
-    }
-
-    $self->[1] = $target->[1];
-    return $self;
-}
-
-sub map {
-    my( $self, $code ) = @_;
-
-    $_ = "$self";
-    my @values = $code->();
-    $self &= $values[0];
-    
 }
 
 1;

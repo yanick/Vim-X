@@ -52,6 +52,14 @@ unless ( $::curbuf ) {
     }
 }
 
+=func vim_msg( @text )
+
+Display the strings of I<@text> concatenated as a vim message.
+
+    vim_msg "Hello from Perl";
+
+=end
+
 sub vim_msg {
     VIM::Msg( join " ", @_ );
 }
@@ -62,11 +70,25 @@ sub vim_prefix {
     $Vim::X::PREFIX = $prefix; 
 }
 
+=func vim_buffer( $i )
+
+Returns the L<Vim::X::Buffer> object associated with the I<$i>th buffer. If
+I<$i> is not given or set to '0', it returns the current buffer.
+
+=end
+
 sub vim_buffer {
     my $buf = shift // $::curbuf->Number;
 
     return Vim::X::Buffer->new( $buf );
 }
+
+=func vim_lines( @indexes )
+
+Returns the L<Vim::X::Line> objects for the lines in I<@indexes> of the
+current buffer.
+
+=end
 
 sub vim_lines {
     vim_buffer->lines(@_);
@@ -94,6 +116,14 @@ END
     
 
 };
+
+=func vim_command( @commands )
+
+Run the given 'ex' commands.
+
+    vim_command 'normal 10G', 'normal iHi there!';
+
+=end
 
 sub vim_command {
     return map { VIM::DoCommand($_) } @_;

@@ -14,25 +14,23 @@ use overload
     ;
 
 has buffer => (
-    isa => 'Vim::X::Buffer',
+    is => 'ro',
     required => 1,
 );
 
 has 'index' => (
-    isa => 'Int',
+    is => 'ro',
     required => 1,
 );
 
-sub buffer  { $_[0]->[0] }
-sub number  { $_[0]->[1] }
 sub content { 
     my $self = shift; 
-    $self->buffer->[1]->Get( $self->number ) 
+    $self->buffer->[1]->Get( $self->index ) 
 } 
 
 sub append {
     my( $self, @lines ) = @_;
-    $self->[0][1]->Append( $self->[1], map { split "\n" } @lines );
+    $self->buffer->append( $self->index, @lines );
 }
 
 

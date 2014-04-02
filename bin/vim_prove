@@ -1,6 +1,6 @@
-#!perl -s
+#!/usr/bin/env perl
 
 exec 'vim', qw/ -V -u NONE -i NONE -N -e -s /,
-    ( map { 1; '-c' => "perl push \@INC, '$_'" } split ":", $I ),
+    ( map { 1; '-c' => "perl push \@INC, '$_'" } split ":", 'lib' ),
     '-c', "perl do '$ARGV[0]' or die $@",
     '-c', "qall!";

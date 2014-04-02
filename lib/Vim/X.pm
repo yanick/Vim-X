@@ -1,4 +1,5 @@
 package Vim::X;
+# ABSTRACT: Candy for Perl programming in Vim
 
 use strict;
 use warnings;
@@ -13,8 +14,12 @@ our @EXPORT = qw/
     vim_lines
     vim_append
     vim_range
+    vim_line
 vim_delete /;
 
+use Vim::X::Window;
+use Vim::X::Buffer;
+use Vim::X::Line;
 
 sub import {
     __PACKAGE__->export_to_level(1, @_);
@@ -62,7 +67,7 @@ Display the strings of I<@text> concatenated as a vim message.
 
     vim_msg "Hello from Perl";
 
-=end
+=cut
 
 sub vim_msg {
     VIM::Msg( join " ", @_ );
@@ -79,7 +84,7 @@ sub vim_prefix {
 Returns the L<Vim::X::Buffer> object associated with the I<$i>th buffer. If
 I<$i> is not given or set to '0', it returns the current buffer.
 
-=end
+=cut
 
 sub vim_buffer {
     my $buf = shift // $::curbuf->Number;
@@ -92,10 +97,14 @@ sub vim_buffer {
 Returns the L<Vim::X::Line> objects for the lines in I<@indexes> of the
 current buffer.
 
-=end
+=cut
 
 sub vim_lines {
     vim_buffer->lines(@_);
+}
+
+sub vim_line {
+    vim_buffer->line(shift);
 }
 
 sub vim_append {
@@ -149,7 +158,7 @@ Run the given 'ex' commands.
 
     vim_command 'normal 10G', 'normal iHi there!';
 
-=end
+=cut
 
 sub vim_command {
     return map { VIM::DoCommand($_) } @_;
@@ -161,8 +170,15 @@ sub vim_call {
     vim_command( $cmd );
 }
 
+=func vim_window( $i )
+
+Returns the L<Vim::X::Window> associated with the I<$i>th window. If I<$i>
+is not provided or is zero, returns the object for the current window.
+
+=cut
+
 sub vim_window {
-    return Vim::X::Window->new($::curwin);
+    return Vim::X::Window->new(shift || $::curwin);
 }
 
 sub vim_cursor {
@@ -174,62 +190,47 @@ sub vim_delete {
     vim_buffer->delete(@_);
 }
 
-package Vim::X::Window;
-
-sub new {
-    my( $class, $win ) = @_;
-    my $self = [ $win ];
-    return bless $self, $class;
-}
-
-sub buffer {
-    my $self = shift;
-    return Vim::X::Buffer->new( $self->[0]->Buffer );
-}
-
-sub cursor {
-    my $win = shift;
-    return wantarray ? $win->[0]->Cursor 
-        : Vim::X::Line->new( $win->buffer, ($win->[0]->Cursor)[0] );
-}
-
-package Vim::X::Buffer;
-
-sub new {
-    my( $class, $buf ) = @_;
-    my $self = ref $buf ? [ -1, $buf ] : [ $buf, (undef,VIM::Buffers())[$buf] ];
-    return bless $self, $class;
-}
-
-sub delete {
-    my ( $self, @lines ) = @_;
-    my %seen;
-    @lines = sort { $a <=> $b } grep { !$seen{$_}++ } map { 0+$_ } @lines;
-
-    for my $r ( reverse @lines ) {
-        $self->[1]->Delete( $r );
-    }
-}
-
-sub line {
-    my ( $self, $nbr ) = @_;
-
-    return Vim::X::Line->new( $self, $nbr );
-}
-
-sub lines {
-    my $self = shift;
-    my @lines = @_;
-    unless(@lines) {
-        @lines = 1..$self->size;
-    }
-
-    return map { Vim::X::Line->new( $self, $_ ) } @lines;
-}
-
-sub size {
-    my $self = shift;
-    $self->[1]->Count;
-}
-
 1;
+
+=synopsis
+
+    package Vim::X::Plugin::MostUsedVariable;
+
+    use strict;
+    use warnings;
+
+    use Vim::X;
+
+    sub MostUsedVariable :Vim {
+        my %var;
+
+        for my $line ( vim_lines ) {
+            $var{$1}++ while $line =~ /[$@%](\s+)/g;
+        }
+
+        my ( $most_used ) = reverse sort { $var{$a} <=> $var{$b} } keys %var;
+
+        vim_msg "variable name $most_used used $var{$most_used} times";
+    }
+
+and then in your C<.vimrc>:
+
+    perl push @INC, '/path/to/plugin/lib';
+    perl use Vim::X::Plugin::MostUsedVariable;
+
+    map <leader>m :call MostUsedVariable()
+
+=description
+
+I<Vim::X> provides two tools to make writing Perl functions for Vim a little
+easier: it auto-exports functions tagged by the attribute C<:Vim> in
+Vim-space, and it defines a slew of helper functions and objects that are a
+little more I<Do What I Mean> than the I<VIM> API module that comes with Vim
+itself.
+
+Obviously, for this module to work, Vim has to be compiled with Perl interpreter
+support.
+
+=head1 SEE ALSO
+
+The original blog entry: L<http://techblog.babyl.ca/entry/vim-x>

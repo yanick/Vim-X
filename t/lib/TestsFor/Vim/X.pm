@@ -5,7 +5,7 @@ use warnings;
 
 use Vim::X;
 
-use Test::Class::Moose;
+use VimTest;
 
 sub test_setup {
     vim_command('new');
@@ -59,7 +59,5 @@ sub test_vim_line :Tests {
     is vim_line() => '', 'cursor, so first line';
     is vim_line(3) => 'b', 'line 3';
 }
-
-__PACKAGE__->new->runtests;
 
 1;

@@ -1,5 +1,21 @@
 Revision history for Vim-X
 
 {{$NEXT}}
+ [API CHANGES]
 
-  - First version, unleashed on an unsuspecting world.
+ [BUG FIXES]
+
+ [DOCUMENTATION]
+
+ [ENHANCEMENTS]
+
+ [NEW FEATURES]
+
+ [STATISTICS]
+
+0.0.1_0 2014-04-02
+ - First version, unleashed on an unsuspecting world.
+
+ [STATISTICS]
+ - code churn: 12 files changed, 82 insertions(+), 60 deletions(-)
+

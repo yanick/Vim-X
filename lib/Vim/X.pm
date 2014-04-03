@@ -54,10 +54,11 @@ END
 }
 
 unless ( $::curbuf ) {
-    package VIM;
+    package 
+        VIM;
     no strict;
     sub AUTOLOAD {
-        warn "calling $AUTOLOAD";
+        # warn "calling $AUTOLOAD";
     }
 }
 
@@ -222,7 +223,7 @@ sub vim_delete {
 
 1;
 
-=synopsis
+=head1 SYNOPSIS
 
     package Vim::X::Plugin::MostUsedVariable;
 
@@ -250,7 +251,7 @@ and then in your C<.vimrc>:
 
     map <leader>m :call MostUsedVariable()
 
-=description
+=head1 DESCRIPTION
 
 I<Vim::X> provides two tools to make writing Perl functions for Vim a little
 easier: it auto-exports functions tagged by the attribute C<:Vim> in

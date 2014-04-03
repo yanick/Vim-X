@@ -1,6 +1,9 @@
 package Vim::X;
+BEGIN {
+  $Vim::X::AUTHORITY = 'cpan:YANICK';
+}
 # ABSTRACT: Candy for Perl programming in Vim
-
+$Vim::X::VERSION = '0.0.1_0';
 use strict;
 use warnings;
 
@@ -62,13 +65,6 @@ unless ( $::curbuf ) {
     }
 }
 
-=func vim_msg( @text )
-
-Display the strings of I<@text> concatenated as a vim message.
-
-    vim_msg "Hello from Perl";
-
-=cut
 
 sub vim_msg {
     VIM::Msg( join " ", @_ );
@@ -80,12 +76,6 @@ sub vim_prefix {
     $Vim::X::PREFIX = $prefix; 
 }
 
-=func vim_buffer( $i )
-
-Returns the L<Vim::X::Buffer> object associated with the I<$i>th buffer. If
-I<$i> is not given or set to '0', it returns the current buffer.
-
-=cut
 
 sub vim_buffer {
     my $buf = shift // $::curbuf->Number;
@@ -93,56 +83,26 @@ sub vim_buffer {
     return Vim::X::Buffer->new( index => $buf, _buffer => $::curbuf );
 }
 
-=func vim_lines( @indexes )
-
-Returns the L<Vim::X::Line> objects for the lines in I<@indexes> of the
-current buffer. If no index is given, returns all the lines of the buffer.
-
-=cut
 
 sub vim_lines {
     vim_buffer->lines(@_);
 }
 
-=func vim_line($index) 
-
-Returns the L<Vim::X::Line> object for line I<$index> of the current buffer.
-If I<$index> is not given, returns the line at the cursor.
-
-=cut
 
 sub vim_line {
     @_ ? vim_buffer->line(shift) : vim_cursor();
 }
 
-=func vim_append(@lines) 
-
-Appends the given lines after the line under the cursor.
-
-If carriage returns are present in the lines, they will be split in
-consequence.
-
-=cut
 
 sub vim_append {
     vim_cursor()->append(@_);
 }
 
-=func vim_eval(@expressions)
-
-Evals the given C<@expressions> and returns their results.
-
-=cut
 
 sub vim_eval {
     return map { scalar VIM::Eval($_) } @_;
 }
 
-=func vim_range()
-
-Returns the range of line (if any) on which the command has been called.
-
-=cut
 
 sub vim_range {
     my( $min, $max ) = map { vim_eval($_) } qw/ a:firstline a:lastline /;
@@ -157,30 +117,11 @@ sub vim_range {
     return vim_lines( $min..$max );
 }
 
-=func vim_command( @commands )
-
-Run the given 'ex' commands and return their results.
-
-    vim_command 'normal 10G', 'normal iHi there!';
-
-=cut
 
 sub vim_command {
     return map { VIM::DoCommand($_) } @_;
 }
 
-=func vim_call( $function, @args )
-
-Calls the vim-space function I<$function> with the 
-provided arguments.
-
-    vim_call( 'SetVersion', '1.23' )
-
-    # equivalent of doing 
-    #    :call SetVersion( '1.23' )
-    # in vim
-
-=cut
 
 sub vim_call {
     my( $func, @args ) = @_;
@@ -188,40 +129,37 @@ sub vim_call {
     vim_command( $cmd );
 }
 
-=func vim_window( $i )
-
-Returns the L<Vim::X::Window> associated with the I<$i>th window. If I<$i>
-is not provided or is zero, returns the object for the current window.
-
-=cut
 
 sub vim_window {
     return Vim::X::Window->new( _window => shift || $::curwin);
 }
 
-=func vim_cursor
-
-Returns the L<Vim::X::Line> associated with the position of the cursor
-in the current window.
-
-=cut
 
 sub vim_cursor {
     my $w = vim_window();
     return $w->cursor;
 }
 
-=func vim_delete( @lines ) 
-
-Deletes the given lines from the current buffer.
-
-=cut
 
 sub vim_delete {
     vim_buffer->delete(@_);
 }
 
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Vim::X - Candy for Perl programming in Vim
+
+=head1 VERSION
+
+version 0.0.1_0
 
 =head1 SYNOPSIS
 
@@ -285,7 +223,6 @@ will be passed to the function via the usual C<@_> way.
 If C<range> is present, the function will be called only once when invoked
 over a range, instead than once per line (which is the default behavior).
 
-
     sub ReverseLines :Vim(range) {
         my @lines = reverse map { "$_" } vim_range();
         for my $line ( vim_range ) {
@@ -296,6 +233,88 @@ over a range, instead than once per line (which is the default behavior).
     # and then in vim:
     :5,15 call ReverseLines()
 
+=head1 FUNCTIONS
+
+=head2 vim_msg( @text )
+
+Display the strings of I<@text> concatenated as a vim message.
+
+    vim_msg "Hello from Perl";
+
+=head2 vim_buffer( $i )
+
+Returns the L<Vim::X::Buffer> object associated with the I<$i>th buffer. If
+I<$i> is not given or set to '0', it returns the current buffer.
+
+=head2 vim_lines( @indexes )
+
+Returns the L<Vim::X::Line> objects for the lines in I<@indexes> of the
+current buffer. If no index is given, returns all the lines of the buffer.
+
+=head2 vim_line($index) 
+
+Returns the L<Vim::X::Line> object for line I<$index> of the current buffer.
+If I<$index> is not given, returns the line at the cursor.
+
+=head2 vim_append(@lines) 
+
+Appends the given lines after the line under the cursor.
+
+If carriage returns are present in the lines, they will be split in
+consequence.
+
+=head2 vim_eval(@expressions)
+
+Evals the given C<@expressions> and returns their results.
+
+=head2 vim_range()
+
+Returns the range of line (if any) on which the command has been called.
+
+=head2 vim_command( @commands )
+
+Run the given 'ex' commands and return their results.
+
+    vim_command 'normal 10G', 'normal iHi there!';
+
+=head2 vim_call( $function, @args )
+
+Calls the vim-space function I<$function> with the 
+provided arguments.
+
+    vim_call( 'SetVersion', '1.23' )
+
+    # equivalent of doing 
+    #    :call SetVersion( '1.23' )
+    # in vim
+
+=head2 vim_window( $i )
+
+Returns the L<Vim::X::Window> associated with the I<$i>th window. If I<$i>
+is not provided or is zero, returns the object for the current window.
+
+=head2 vim_cursor
+
+Returns the L<Vim::X::Line> associated with the position of the cursor
+in the current window.
+
+=head2 vim_delete( @lines ) 
+
+Deletes the given lines from the current buffer.
+
 =head1 SEE ALSO
 
 The original blog entry: L<http://techblog.babyl.ca/entry/vim-x>
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@babyl.dyndns.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

@@ -35,7 +35,7 @@ END
 }
 
 sub Vim :ATTR_SUB {
-    my( $class, $sym_ref, $code_ref, $attr_name, $attr_data ) = @_;
+    my( $class, $sym_ref, undef, undef, $attr_data ) = @_;
 
     my $name = *{$sym_ref}{NAME};
 

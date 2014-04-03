@@ -44,6 +44,22 @@ sub test_vim_append :Tests {
 
 };
 
+sub test_vim_buffer :Tests {
+    isa_ok vim_buffer() => 'Vim::X::Buffer';
+}
+
+sub test_vim_lines :Tests {
+    vim_append( 'a'..'d' );
+    is join( '', vim_lines ) => 'abcd', 'all lines';
+    is join( '', vim_lines( 3,4 ) ) => 'bc', 'subset';
+}
+
+sub test_vim_line :Tests {
+    vim_append( 'a'..'d' );
+    is vim_line() => '', 'cursor, so first line';
+    is vim_line(3) => 'b', 'line 3';
+}
+
 __PACKAGE__->new->runtests;
 
 1;

@@ -51,6 +51,7 @@ line.
 
 use overload
     '""' => sub { $_[0]->content },
+    'eq' => sub { $_[0]->content eq $_[1] },
     '<<=' => sub { $_[0]->content( $_[1] ) },
     '0+' => sub { return $_[0]->index },
     '+' => sub { return $_[0]->index + $_[1] },

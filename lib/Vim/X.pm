@@ -39,7 +39,7 @@ sub Vim :ATTR_SUB {
 
     my $name = *{$sym_ref}{NAME};
 
-    my $args = $attr_data eq 'args' ? '...' : undef;
+    my $args = $attr_data =~ 'args' ? '...' : undef;
 
     my $range = 'range' x ( $attr_data =~ /range/ );
 
@@ -89,13 +89,13 @@ I<$i> is not given or set to '0', it returns the current buffer.
 sub vim_buffer {
     my $buf = shift // $::curbuf->Number;
 
-    return Vim::X::Buffer->new( $buf );
+    return Vim::X::Buffer->new( index => $buf, _buffer => $::curbuf );
 }
 
 =func vim_lines( @indexes )
 
 Returns the L<Vim::X::Line> objects for the lines in I<@indexes> of the
-current buffer.
+current buffer. If no index is given, returns all the lines of the buffer.
 
 =cut
 
@@ -103,17 +103,45 @@ sub vim_lines {
     vim_buffer->lines(@_);
 }
 
+=func vim_line($index) 
+
+Returns the L<Vim::X::Line> object for line I<$index> of the current buffer.
+If I<$index> is not given, returns the line at the cursor.
+
+=cut
+
 sub vim_line {
-    vim_buffer->line(shift);
+    @_ ? vim_buffer->line(shift) : vim_cursor();
 }
+
+=func vim_append(@lines) 
+
+Appends the given lines after the line under the cursor.
+
+If carriage returns are present in the lines, they will be split in
+consequence.
+
+=cut
 
 sub vim_append {
     vim_cursor()->append(@_);
 }
 
+=func vim_eval(@expressions)
+
+Evals the given C<@expressions> and returns their results.
+
+=cut
+
 sub vim_eval {
     return map { scalar VIM::Eval($_) } @_;
 }
+
+=func vim_range()
+
+Returns the range of line (if any) on which the command has been called.
+
+=cut
 
 sub vim_range {
     my( $min, $max ) = map { vim_eval($_) } qw/ a:firstline a:lastline /;
@@ -128,33 +156,9 @@ sub vim_range {
     return vim_lines( $min..$max );
 }
 
-sub vim_func {
-    my $name = shift;
-    my $sub = pop;
-    my %args = @_;
-
-    if ( $Vim::X::PREFIX ) {
-        $name = $Vim::X::PREFIX . $name;
-    }
-
-    my $args = $args{args} ? '...' : undef;
-
-    my $range = 'range' x $args =~ /range/;
-
-    no strict 'refs';
-    *{"::$name"} = $sub;
-    VIM::DoCommand(<<END);
-function $name($args) $range
-    perl ::$name( split "\\n", scalar VIM::Eval('a:000'))
-endfunction
-END
-    
-
-};
-
 =func vim_command( @commands )
 
-Run the given 'ex' commands.
+Run the given 'ex' commands and return their results.
 
     vim_command 'normal 10G', 'normal iHi there!';
 
@@ -163,6 +167,19 @@ Run the given 'ex' commands.
 sub vim_command {
     return map { VIM::DoCommand($_) } @_;
 }
+
+=func vim_call( $function, @args )
+
+Calls the vim-space function I<$function> with the 
+provided arguments.
+
+    vim_call( 'SetVersion', '1.23' )
+
+    # equivalent of doing 
+    #    :call SetVersion( '1.23' )
+    # in vim
+
+=cut
 
 sub vim_call {
     my( $func, @args ) = @_;
@@ -178,13 +195,26 @@ is not provided or is zero, returns the object for the current window.
 =cut
 
 sub vim_window {
-    return Vim::X::Window->new(shift || $::curwin);
+    return Vim::X::Window->new( _window => shift || $::curwin);
 }
+
+=func vim_cursor
+
+Returns the L<Vim::X::Line> associated with the position of the cursor
+in the current window.
+
+=cut
 
 sub vim_cursor {
     my $w = vim_window();
     return $w->cursor;
 }
+
+=func vim_delete( @lines ) 
+
+Deletes the given lines from the current buffer.
+
+=cut
 
 sub vim_delete {
     vim_buffer->delete(@_);
@@ -230,6 +260,40 @@ itself.
 
 Obviously, for this module to work, Vim has to be compiled with Perl interpreter
 support.
+
+=head2 Import Perl function in Vim-space
+
+Function labeled with the C<:Vim> attribute are automatically exported to Vim.
+
+The C<:Vim> attribute accepts two optional parameters: C<args> and C<range>. 
+
+=head3 :Vim(args)
+
+If C<args> is present, the function will be exported expecting arguments, that
+will be passed to the function via the usual C<@_> way.
+
+    sub Howdie :Vim(args) {
+        vim_msg( "Hi there, ", $_[0] );
+    }
+
+    # and then in vim:
+    call Howdie("buddy")
+
+=head3 :Vim(range)
+
+If C<range> is present, the function will be called only once when invoked
+over a range, instead than once per line (which is the default behavior).
+
+
+    sub ReverseLines :Vim(range) {
+        my @lines = reverse map { "$_" } vim_range();
+        for my $line ( vim_range ) {
+            $line <<= pop @lines;
+        }
+    }
+
+    # and then in vim:
+    :5,15 call ReverseLines()
 
 =head1 SEE ALSO
 

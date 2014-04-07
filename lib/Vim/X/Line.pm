@@ -108,7 +108,7 @@ the current content.
 
 sub content { 
     my $self = shift;
-    $self->buffer->set_line( $self->index, @_ ) if @_;
+    $self->buffer->set_line( $self->index, map { split "\n" } @_ ) if @_;
     return $self->buffer->lines_content( $self->index );
 } 
 

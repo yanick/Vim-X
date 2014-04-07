@@ -84,8 +84,9 @@ Sets the content of the line.
 =cut
 
 sub set_line {
-    my( $self, $i, $content ) = @_;
-    $self->_buffer->Set($i => $content);
+    my( $self, $i, @content ) = @_;
+    $self->_buffer->Set($i => shift @content);
+    $self->append( $i => @content ) if @content;
 }
 
 =func lines( @indexes )

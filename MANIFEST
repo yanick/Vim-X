@@ -29,7 +29,6 @@ t/00-compile.t
 t/000-report-versions-tiny.t
 t/TestFor/lib/Vim/X/Line.pm
 t/lib/TestsFor/Vim/X.pm
-t/lib/TestsFor/Vim/X/Buffer.pm
 t/lib/TestsFor/Vim/X/Line.pm
 t/lib/TestsFor/Vim/X/_synopsis.pm
 t/lib/VimTest.pm

@@ -4,6 +4,7 @@ Revision history for Vim-X
  [API CHANGES]
 
  [BUG FIXES]
+ - Tests skipped if vim not found, or not compiled with perl support.
 
  [DOCUMENTATION]
 

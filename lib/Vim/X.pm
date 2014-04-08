@@ -35,6 +35,8 @@ END
 }
 
 sub Vim :ATTR_SUB {
+    no warnings 'uninitialized';
+
     my( $class, $sym_ref, undef, undef, $attr_data ) = @_;
 
     my $name = *{$sym_ref}{NAME};
@@ -53,7 +55,7 @@ END
     return;
 }
 
-unless ( $::curbuf ) {
+unless ( $main::curbuf ) {
     package 
         VIM;
     no strict;

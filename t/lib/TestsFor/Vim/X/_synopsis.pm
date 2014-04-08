@@ -5,7 +5,7 @@ use warnings;
 
 use Vim::X;
 
-use Test::Class::Moose;
+use Test::Class::Moose extends => 'VimTest';
 
 sub test_setup {
     vim_command('new');
@@ -31,13 +31,11 @@ sub MostUsedVariable :Vim {
 sub test_synopsis :Tests {
     vim_cursor->append( "\$foo\n\$bar \$foo\n\$foo" );
 
-    is join( '', vim_lines ) => '';
+    is join( '', vim_lines ) => "\$foo\$bar \$foo\$foo";
 
     vim_command( 'call MostUsedVariable()' );
 
-    is $last_msg => '';
+    is $last_msg => 'variable name foo used 3 times';
 }
-
-__PACKAGE__->new->runtests;
 
 1;

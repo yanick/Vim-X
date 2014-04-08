@@ -5,7 +5,7 @@ use warnings;
 
 use Vim::X;
 
-use VimTest;
+use Test::Class::Moose extends => 'VimTest';
 
 sub test_setup {
     vim_command('new');
@@ -86,8 +86,5 @@ sub test_search :Tests {
 
     ok !$line->ff(sub { 0 } );
 }
-
-
-__PACKAGE__->new->runtests;
 
 1;

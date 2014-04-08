@@ -5,7 +5,7 @@ use warnings;
 
 use Vim::X;
 
-use VimTest;
+use Test::Class::Moose extends => 'VimTest';
 
 sub test_setup {
     vim_command('new');

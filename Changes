@@ -1,6 +1,8 @@
 Revision history for Vim-X
 
 {{$NEXT}}
+ - Adding tests, and pushing as stable.
+
  [API CHANGES]
 
  [BUG FIXES]

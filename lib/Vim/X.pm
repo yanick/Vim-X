@@ -55,6 +55,42 @@ END
     return;
 }
 
+sub load_function_dir {
+    my $dir = shift;
+
+    my @files = <$dir/*.pl>; 
+
+    for my $f ( @files ) {
+        my $name = _func_name($f);
+        vim_command( 
+            "au FuncUndefined $name perl Vim::X::load_function_file('$f')" 
+        );
+    }
+
+END
+
+}
+
+sub _func_name {
+    my $name = shift;
+    $name =~ s#^.*/##;
+    $name =~ s#\.pl$##;
+    return $name;
+}
+
+sub load_function_file {
+    my $file = shift;
+
+    my $name = _func_name($file);
+
+    eval <<"END";
+    package $name;
+
+    do '$file';
+END
+
+}
+
 unless ( $main::curbuf ) {
     package 
         VIM;

@@ -1,0 +1,101 @@
+{
+   "abstract" : "Candy for Perl programming in Vim",
+   "author" : [
+      "Yanick Champoux <yanick@babyl.dyndns.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.014, CPAN::Meta::Converter version 2.140640",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Vim-X",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "version" : "0.9901"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Exporter" : "0",
+            "Moo" : "0",
+            "Sub::Attribute" : "0",
+            "overload" : "0",
+            "parent" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "File::Which" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::Class::Moose" : "0",
+            "Test::Class::Moose::Load" : "0",
+            "Test::More" : "0.88",
+            "base" : "0",
+            "perl" : "5.006"
+         }
+      }
+   },
+   "provides" : {
+      "Vim::X" : {
+         "file" : "lib/Vim/X.pm",
+         "version" : "v0.2.0"
+      },
+      "Vim::X::Buffer" : {
+         "file" : "lib/Vim/X/Buffer.pm",
+         "version" : "v0.2.0"
+      },
+      "Vim::X::Line" : {
+         "file" : "lib/Vim/X/Line.pm",
+         "version" : "v0.2.0"
+      },
+      "Vim::X::Plugin::ResolveConflict" : {
+         "file" : "lib/Vim/X/Plugin/ResolveConflict.pm",
+         "version" : "v0.2.0"
+      },
+      "Vim::X::Window" : {
+         "file" : "lib/Vim/X/Window.pm",
+         "version" : "v0.2.0"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/yanick/Vim-X/issues"
+      },
+      "homepage" : "http://search.cpan.org/dist/Vim-X/",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/yanick/Vim-X.git",
+         "web" : "https://github.com/yanick/Vim-X"
+      }
+   },
+   "version" : "0.2.0",
+   "x_author_pledge" : {
+      "version" : 1
+   },
+   "x_authority" : "cpan:YANICK",
+   "x_contributors" : [
+      "Yanick Champoux <yanick@cpan.org>"
+   ]
+}
+

@@ -1,0 +1,211 @@
+# NAME
+
+Vim::X - Candy for Perl programming in Vim
+
+# VERSION
+
+version 0.2.0
+
+# SYNOPSIS
+
+    package Vim::X::Plugin::MostUsedVariable;
+
+    use strict;
+    use warnings;
+
+    use Vim::X;
+
+    sub MostUsedVariable :Vim {
+        my %var;
+
+        for my $line ( vim_lines ) {
+            $var{$1}++ while $line =~ /[$@%](\s+)/g;
+        }
+
+        my ( $most_used ) = reverse sort { $var{$a} <=> $var{$b} } keys %var;
+
+        vim_msg "variable name $most_used used $var{$most_used} times";
+    }
+
+and then in your `.vimrc`:
+
+    perl push @INC, '/path/to/plugin/lib';
+    perl use Vim::X::Plugin::MostUsedVariable;
+
+    map <leader>m :call MostUsedVariable()
+
+# DESCRIPTION
+
+_Vim::X_ provides two tools to make writing Perl functions for Vim a little
+easier: it auto-exports functions tagged by the attribute `:Vim` in
+Vim-space, and it defines a slew of helper functions and objects that are a
+little more _Do What I Mean_ than the _VIM_ API module that comes with Vim
+itself.
+
+Obviously, for this module to work, Vim has to be compiled with Perl interpreter
+support.
+
+## Import Perl function in Vim-space
+
+Function labeled with the `:Vim` attribute are automatically exported to Vim.
+
+The `:Vim` attribute accepts two optional parameters: `args` and `range`. 
+
+### :Vim(args)
+
+If `args` is present, the function will be exported expecting arguments, that
+will be passed to the function via the usual `@_` way.
+
+    sub Howdie :Vim(args) {
+        vim_msg( "Hi there, ", $_[0] );
+    }
+
+    # and then in vim:
+    call Howdie("buddy")
+
+### :Vim(range)
+
+If `range` is present, the function will be called only once when invoked
+over a range, instead than once per line (which is the default behavior).
+
+    sub ReverseLines :Vim(range) {
+        my @lines = reverse map { "$_" } vim_range();
+        for my $line ( vim_range ) {
+            $line <<= pop @lines;
+        }
+    }
+
+    # and then in vim:
+    :5,15 call ReverseLines()
+
+### Loading libraries
+
+If your collection of functions is growing, 
+`load_function_dir()` can help with their management. See that function below
+for more details.
+
+# FUNCTIONS
+
+## load\_function\_dir( $library\_dir)
+
+Looks into the given _$library\_dir_ and imports the functions in all
+files with the extension `.pl` (non-recursively).
+Each file must have the name of its main
+function to be imported to Vim-space.
+
+To have good start-up time, and to avoid loading all dependencies even for
+unused functions, the different files aren't sourced at start-up, but are
+using the `autocmd` function of Vim to load those files only if used.
+
+E.g.,
+
+    # in ~/.vim/vimx/perlweekly/PWGetInfo.pl
+    use Vim::X;
+
+    use LWP::UserAgent;
+    use Web::Query;
+    use Escape::Houdini;
+
+    sub PWGetInfo :Vim() {
+        ...;
+    }
+
+    # in .vimrc
+    perl use Vim::X;
+
+    autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
+                \ perl Vim::X::load_function_dir('~/.vim/vimx/perlweekly')
+    autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
+                \ map <leader>pw :call PWGetInfo()<CR>
+
+And there you do, the mapping '<leader>pw' will only be created if a markdown
+file within the perlweekly directory will be visited.
+
+## load\_function\_file( $file\_path )
+
+Loads the code within _$file\_path_ under the namespace
+_Vim::X::Function::$name_, where name if the basename of the _$file\_path_,
+minus the `.pl` extension. Not that useful by itself, but used by 
+`load_function_dir`.
+
+## vim\_msg( @text )
+
+Display the strings of _@text_ concatenated as a vim message.
+
+    vim_msg "Hello from Perl";
+
+## vim\_buffer( $i )
+
+Returns the [Vim::X::Buffer](https://metacpan.org/pod/Vim::X::Buffer) object associated with the _$i_th buffer. If
+_$i_ is not given or set to '0', it returns the current buffer.
+
+## vim\_lines( @indexes )
+
+Returns the [Vim::X::Line](https://metacpan.org/pod/Vim::X::Line) objects for the lines in _@indexes_ of the
+current buffer. If no index is given, returns all the lines of the buffer.
+
+## vim\_line($index) 
+
+Returns the [Vim::X::Line](https://metacpan.org/pod/Vim::X::Line) object for line _$index_ of the current buffer.
+If _$index_ is not given, returns the line at the cursor.
+
+## vim\_append(@lines) 
+
+Appends the given lines after the line under the cursor.
+
+If carriage returns are present in the lines, they will be split in
+consequence.
+
+## vim\_eval(@expressions)
+
+Evals the given `@expressions` and returns their results.
+
+## vim\_range()
+
+Returns the range of line (if any) on which the command has been called.
+
+## vim\_command( @commands )
+
+Run the given 'ex' commands and return their results.
+
+    vim_command 'normal 10G', 'normal iHi there!';
+
+## vim\_call( $function, @args )
+
+Calls the vim-space function _$function_ with the 
+provided arguments.
+
+    vim_call( 'SetVersion', '1.23' )
+
+    # equivalent of doing 
+    #    :call SetVersion( '1.23' )
+    # in vim
+
+## vim\_window( $i )
+
+Returns the [Vim::X::Window](https://metacpan.org/pod/Vim::X::Window) associated with the _$i_th window. If _$i_
+is not provided or is zero, returns the object for the current window.
+
+## vim\_cursor
+
+Returns the [Vim::X::Line](https://metacpan.org/pod/Vim::X::Line) associated with the position of the cursor
+in the current window.
+
+## vim\_delete( @lines ) 
+
+Deletes the given lines from the current buffer.
+
+# SEE ALSO
+
+The original blog entry: [http://techblog.babyl.ca/entry/vim-x](http://techblog.babyl.ca/entry/vim-x)
+
+# AUTHOR
+
+Yanick Champoux <yanick@babyl.dyndns.org> [![endorse](http://api.coderwall.com/yanick/endorsecount.png)](http://coderwall.com/yanick)
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.

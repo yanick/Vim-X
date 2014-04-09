@@ -55,6 +55,43 @@ END
     return;
 }
 
+=func load_function_dir( $library_dir)
+
+Looks into the given I<$library_dir> and imports the functions in all
+files with the extension C<.pl> (non-recursively).
+Each file must have the name of its main
+function to be imported to Vim-space.
+
+To have good start-up time, and to avoid loading all dependencies even for
+unused functions, the different files aren't sourced at start-up, but are
+using the C<autocmd> function of Vim to load those files only if used.
+
+E.g.,
+
+    # in ~/.vim/vimx/perlweekly/PWGetInfo.pl
+    use Vim::X;
+
+    use LWP::UserAgent;
+    use Web::Query;
+    use Escape::Houdini;
+
+    sub PWGetInfo :Vim() {
+        ...;
+    }
+
+    # in .vimrc
+    perl use Vim::X;
+
+    autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
+                \ perl Vim::X::load_function_dir('~/.vim/vimx/perlweekly')
+    autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
+                \ map <leader>pw :call PWGetInfo()<CR>
+
+And there you do, the mapping '<leader>pw' will only be created if a markdown
+file within the perlweekly directory will be visited.
+
+=cut
+
 sub load_function_dir {
     my $dir = shift;
 
@@ -78,6 +115,15 @@ sub _func_name {
     return $name;
 }
 
+=func load_function_file( $file_path )
+
+Loads the code within I<$file_path> under the namespace
+I<Vim::X::Function::$name>, where name if the basename of the I<$file_path>,
+minus the C<.pl> extension. Not that useful by itself, but used by 
+C<load_function_dir>.
+
+=cut
+
 sub load_function_file {
     my $file = shift;
 
@@ -88,6 +134,8 @@ sub load_function_file {
 
     do '$file';
 END
+
+    return '';
 
 }
 
@@ -333,6 +381,14 @@ over a range, instead than once per line (which is the default behavior).
 
     # and then in vim:
     :5,15 call ReverseLines()
+
+=head3 Loading libraries
+
+If your collection of functions is growing, 
+C<load_function_dir()> can help with their management. See that function below
+for more details.
+
+
 
 =head1 SEE ALSO
 

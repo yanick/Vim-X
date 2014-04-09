@@ -4,16 +4,24 @@ Revision history for Vim-X
  [API CHANGES]
 
  [BUG FIXES]
- - Tests skipped if vim not found, or not compiled with perl support.
 
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - Added 'load_function_dir()' loading mechanism.
 
  [NEW FEATURES]
 
  [STATISTICS]
+
+0.2.0 2014-04-08
+ [BUG FIXES]
+ - Tests skipped if vim not found, or not compiled with perl support.
+
+ [ENHANCEMENTS]
+ - Added 'load_function_dir()' loading mechanism.
+
+ [STATISTICS]
+ - code churn: 3 files changed, 106 insertions(+), 32 deletions(-)
 
 0.1.0 2014-04-07
  - Adding tests, and pushing as stable.

@@ -9,6 +9,7 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - Added 'load_function_dir()' loading mechanism.
 
  [NEW FEATURES]
 

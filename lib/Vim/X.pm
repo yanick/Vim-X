@@ -232,7 +232,6 @@ Returns the range of line (if any) on which the command has been called.
 
 sub vim_range {
     my( $min, $max ) = map { vim_eval($_) } qw/ a:firstline a:lastline /;
-    warn $min, " ", $max;
 
     if( @_ ) {
         vim_buffer->[1]->Delete( $min, $max );
@@ -393,3 +392,9 @@ for more details.
 =head1 SEE ALSO
 
 The original blog entry: L<http://techblog.babyl.ca/entry/vim-x>
+
+=head3 CONTRIBUTORS
+
+Hernan Lopes
+
+

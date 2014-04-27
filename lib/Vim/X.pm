@@ -5,6 +5,8 @@ use strict;
 use warnings;
 
 use Sub::Attribute;
+use Path::Tiny;
+
 use parent 'Exporter';
 
 our @EXPORT = qw/ 
@@ -62,9 +64,10 @@ files with the extension C<.pl> (non-recursively).
 Each file must have the name of its main
 function to be imported to Vim-space.
 
-To have good start-up time, and to avoid loading all dependencies even for
-unused functions, the different files aren't sourced at start-up, but are
-using the C<autocmd> function of Vim to load those files only if used.
+To have good start-up time and to avoid loading all dependencies for
+all functions, the different files aren't sourced at start-up, but are
+rather using the C<autocmd> function of Vim to trigger the loading
+of those files only if used.
 
 E.g.,
 
@@ -87,9 +90,6 @@ E.g.,
     autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
                 \ map <leader>pw :call PWGetInfo()<CR>
 
-And there you do, the mapping '<leader>pw' will only be created if a markdown
-file within the perlweekly directory will be visited.
-
 =cut
 
 sub load_function_dir {
@@ -103,23 +103,87 @@ sub load_function_dir {
             "au FuncUndefined $name perl Vim::X::load_function_file('$f')" 
         );
     }
+}
 
-END
+=func source_function_dir( $library_dir )
 
+Like C<load_function_dir>, but if it finds files with the exension C<.pvim>, 
+it'll also source them as C<vimL> files at
+load-time, allowing to define both the Perl bindings and the vim macros in the
+same file. Note that, magically, the Perl code will still only be compiled if the function
+is invoked.
+
+For that special type of magic to happen, the C<.pvim> files must follow a certain pattern to
+be able to live their double-life as Perl scripts and vim file:
+
+    ""; <<'finish';
+
+    " your vim code goes here
+
+    finish
+
+    # the Perl code goes here
+
+
+When sourced as a vim script, the first line is considered a comment and
+ignored, and the rest is read until it hits C<finish>, which cause Vim to 
+stop reading the file. When read as a Perl file, the first line contains a
+heredoc that makes all the Vim code into an unused string, so basically ignore
+it in a fancy way.
+
+For example, the snippet for C<load_function_dir> could be rewritten as such:
+
+    # in ~/.vim/vimx/perlweekly/PWGetInfo.pvim
+    ""; <<'finish';
+
+        map <leader>pw :call PWGetInfo()<CR>
+
+    finish
+
+    use Vim::X;
+
+    use LWP::UserAgent;
+    use Web::Query;
+    use Escape::Houdini;
+
+    sub PWGetInfo :Vim() {
+        ...;
+    }
+
+    # in .vimrc
+    perl use Vim::X;
+
+    autocmd BufNewFile,BufRead **/perlweekly/src/*.mkd 
+                \ perl Vim::X::source_function_dir('~/.vim/vimx/perlweekly')
+
+=cut
+
+sub source_function_dir {
+    my $dir = shift;
+
+    my @files = ( <$dir/*.pl>, <$dir/*.pvim> );
+
+    for my $f ( @files ) {
+        my $name = _func_name($f);
+        vim_command( "source $f" ) if $f =~ /\.pvim$/;
+        vim_command( 
+            "au FuncUndefined $name perl Vim::X::load_function_file('$f')" 
+        );
+    }
 }
 
 sub _func_name {
     my $name = shift;
     $name =~ s#^.*/##;
-    $name =~ s#\.pl$##;
+    $name =~ s#\.p(?:l|vim)$##;
     return $name;
 }
 
 =func load_function_file( $file_path )
 
 Loads the code within I<$file_path> under the namespace
-I<Vim::X::Function::$name>, where name if the basename of the I<$file_path>,
-minus the C<.pl> extension. Not that useful by itself, but used by 
+I<Vim::X::Function::$name>, where name is the basename of the I<$file_path>,
+minus the C<.pl>/C<.pvim> extension. Not that useful by itself, but used by 
 C<load_function_dir>.
 
 =cut
@@ -129,11 +193,12 @@ sub load_function_file {
 
     my $name = _func_name($file);
 
-    eval <<"END";
-    package $name;
+    eval "{ package Vim::X::Function::$name;\n" 
+       . Path::Tiny::path($file)->slurp
+       . "\n}"
+       ;
 
-    do '$file';
-END
+    vim_msg( "ERROR: $@" ) if $@;
 
     return '';
 

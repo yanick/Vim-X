@@ -1,19 +1,14 @@
 Revision history for Vim-X
 
-{{$NEXT}}
- [API CHANGES]
-
+0.3.0 2014-04-27
  [BUG FIXES]
  - Removed a spurious warning. (GH#1, Hernan Lopes)
-
- [DOCUMENTATION]
 
  [ENHANCEMENTS]
  - Add source_function_dir().
 
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 4 files changed, 99 insertions(+), 18 deletions(-)
 
 0.2.0 2014-04-08
  [BUG FIXES]

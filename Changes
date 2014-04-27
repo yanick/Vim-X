@@ -8,6 +8,7 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - Add source_function_dir().
 
  [NEW FEATURES]
 

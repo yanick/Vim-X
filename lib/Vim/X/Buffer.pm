@@ -118,6 +118,21 @@ sub size {
     $self->_buffer->Count;
 }
 
+=func range( $from, $to )
+
+Returns the L<Vim::X::Range> object for the given range of lines.
+
+=cut
+
+sub range {
+    require Vim::X::Range;
+    return Vim::X::Range->new(
+        _buffer => $_[0],
+        from    => $_[1],
+        to      => $_[2]
+    );
+}
+
 1;
 
 

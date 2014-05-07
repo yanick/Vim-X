@@ -170,6 +170,7 @@ sub _search {
     my $cond = $condition;
     $cond = sub { $_[0]->content =~ $condition }  if ref $condition eq 'Regexp';
 
+    $_ = $target;
     $it->() or return until $cond->($target);
 
     $self->index( $target->index );

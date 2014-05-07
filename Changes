@@ -2,6 +2,7 @@ Revision history for Vim-X
 
 {{$NEXT}}
  [API CHANGES]
+ - vim_range() now returns a Vim::X::Range object.
 
  [BUG FIXES]
 

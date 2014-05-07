@@ -194,6 +194,7 @@ sub load_function_file {
     my $name = _func_name($file);
 
     eval "{ package Vim::X::Function::$name;\n" 
+       . "no warnings;\n"
        . Path::Tiny::path($file)->slurp
        . "\n}"
        ;
@@ -289,22 +290,27 @@ sub vim_eval {
     return map { scalar VIM::Eval($_) } @_;
 }
 
+=func vim_range($from, $to)
+
+=func vim_range($line)
+
 =func vim_range()
 
-Returns the range of line (if any) on which the command has been called.
+Returns a L<Vim::X::Range> object for the given lines, or single line,
+in the current buffer. The lines can be passed as indexes, or L<Vim::X::Line>
+objects.
+
+If no line whatsoever is passed, the range will be the one on 
+which the command has been called (i.e.: C<:afirstline> and C<a:lastline>).
 
 =cut
 
 sub vim_range {
-    my( $min, $max ) = map { vim_eval($_) } qw/ a:firstline a:lastline /;
+    my @range = map { 0 + $_ } @_ == 2 ? @_
+                             : @_ == 1 ? ( @_ ) x 2
+                             : map { vim_eval($_) } qw/ a:firstline a:lastline /;
 
-    if( @_ ) {
-        vim_buffer->[1]->Delete( $min, $max );
-        vim_buffer->line($min)->append(@_);
-        return;
-    }
-
-    return vim_lines( $min..$max );
+    return vim_buffer->range( @range );
 }
 
 =func vim_command( @commands )

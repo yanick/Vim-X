@@ -24,12 +24,14 @@ lib/Vim/X.pm
 lib/Vim/X/Buffer.pm
 lib/Vim/X/Line.pm
 lib/Vim/X/Plugin/ResolveConflict.pm
+lib/Vim/X/Range.pm
 lib/Vim/X/Window.pm
 t/00-compile.t
 t/000-report-versions-tiny.t
 t/TestFor/lib/Vim/X/Line.pm
 t/lib/TestsFor/Vim/X.pm
 t/lib/TestsFor/Vim/X/Line.pm
+t/lib/TestsFor/Vim/X/Range.pm
 t/lib/TestsFor/Vim/X/_synopsis.pm
 t/lib/VimTest.pm
 t/run_vim_tests.t

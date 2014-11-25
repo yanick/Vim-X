@@ -227,7 +227,7 @@ version 1.0.0
         my %var;
 
         for my $line ( vim_lines ) {
-            $var{$1}++ while $line =~ /[$@%](\s+)/g;
+            $var{$1}++ while $line =~ /[$@%](\w+)/g;
         }
 
         my ( $most_used ) = reverse sort { $var{$a} <=> $var{$b} } keys %var;

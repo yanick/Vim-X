@@ -15,6 +15,7 @@ our @EXPORT = qw/
     vim_call
     vim_lines
     vim_append
+    vim_eval
     vim_range
     vim_line
 vim_delete /;

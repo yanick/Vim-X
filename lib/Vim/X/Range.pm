@@ -72,8 +72,7 @@ sub replace {
 
 sub from_rewind {
     my( $self, $condition ) = @_;
-    my @lines = $self->lines;
-    my $from = $lines[0];
+    my( $from ) = $self->lines;
     $from->rewind($condition) or return;
     $self->from( 0 + $from );
     return $self->from;
@@ -81,8 +80,7 @@ sub from_rewind {
 
 sub from_ff {
     my( $self, $condition ) = @_;
-    my @lines = $self->lines;
-    my $from = $lines[0];
+    my( $from ) = $self->lines;
     $from->ff($condition) or return;
     return if $from + 0 > $self->to;
     $self->from( 0 + $from );
@@ -91,8 +89,7 @@ sub from_ff {
 
 sub to_rewind {
     my( $self, $condition ) = @_;
-    my @lines = $self->lines;
-    my $to = $lines[-1];
+    my $to = ( $self->lines )[-1];
     $to->rewind($condition) or return;
     return if $to + 0 < $self->from;
     $self->to( 0 + $to );
@@ -101,8 +98,7 @@ sub to_rewind {
 
 sub to_ff {
     my( $self, $condition ) = @_;
-    my @lines = $self->lines;
-    my $to = $lines[-1];
+    my $to = ( $self->lines )[-1];
     $to->ff($condition) or return;
     $self->to( 0 + $to );
     return $self->to;

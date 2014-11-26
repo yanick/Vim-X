@@ -20,6 +20,8 @@ contrib/myvim.vim
 contrib/test.vim
 contrib/vim.test
 contrib/vim_prove
+cpanfile
+doap.xml
 lib/Vim/X.pm
 lib/Vim/X/Buffer.pm
 lib/Vim/X/Line.pm

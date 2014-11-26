@@ -4,8 +4,10 @@ Revision history for Vim-X
  [API CHANGES]
 
  [BUG FIXES]
+ - 'vim_eval' wasn't exported.
 
  [DOCUMENTATION]
+ - Synopsis typo fix. (GH#2, Graham Todd)
 
  [ENHANCEMENTS]
 

@@ -1,19 +1,14 @@
 Revision history for Vim-X
 
-{{$NEXT}}
- [API CHANGES]
-
+1.0.1 2014-11-26
  [BUG FIXES]
  - 'vim_eval' wasn't exported.
 
  [DOCUMENTATION]
  - Synopsis typo fix. (GH#2, Graham Todd)
 
- [ENHANCEMENTS]
-
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 4 files changed, 17 insertions(+), 10 deletions(-)
 
 1.0.0 2014-05-07
  [API CHANGES]

@@ -1,36 +1,19 @@
-package TestsFor::Vim::X;
-
 use strict;
 use warnings;
 
+use lib 't/lib';
+
+use Test::More;
+
+use VimTest;
 use Vim::X;
 
-use Test::Class::Moose extends => 'VimTest';
+plan tests => 5;
 
-sub test_setup {
-    vim_command('new');
-}
+isa_ok vim_window() => 'Vim::X::Window', "get the right object";
 
-sub test_teardown {
-    vim_command('close!');
-}
 
-sub test_vim_window :Tests {
-    my $window = vim_window;
-
-    isa_ok $window => 'Vim::X::Window', "get the right object";
-}
-
-sub test_vim_cursor :Tests {
-    my $x = vim_cursor();
-
-    isa_ok $x => 'Vim::X::Line', 'scalar invocation gives a line';
-
-    is_deeply [ vim_cursor ] => [1,0], 'list context gives coordinates';
-}
-
-sub test_vim_append :Tests {
-    
+subtest vim_append => sub  {
     vim_append( 'a'..'c' );
 
     is join( '!', vim_lines() ) => '!a!b!c', "append";
@@ -44,20 +27,19 @@ sub test_vim_append :Tests {
 
 };
 
-sub test_vim_buffer :Tests {
+subtest vim_buffer => in_window  {
     isa_ok vim_buffer() => 'Vim::X::Buffer';
-}
+};
 
-sub test_vim_lines :Tests {
+subtest vim_lines => in_window  {
     vim_append( 'a'..'d' );
     is join( '', vim_lines ) => 'abcd', 'all lines';
     is join( '', vim_lines( 3,4 ) ) => 'bc', 'subset';
-}
+};
 
-sub test_vim_line :Tests {
+subtest vim_line => in_window  {
     vim_append( 'a'..'d' );
     is vim_line() => '', 'cursor, so first line';
     is vim_line(3) => 'b', 'line 3';
-}
+};
 
-1;

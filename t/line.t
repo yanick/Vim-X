@@ -1,21 +1,16 @@
-package TestsFor::Vim::X::Line;
-
 use strict;
 use warnings;
 
+use lib 't/lib';
+
+use Test::More;
+
+use VimTest;
 use Vim::X;
 
-use Test::Class::Moose extends => 'VimTest';
+plan tests => 6;
 
-sub test_setup {
-    vim_command('new');
-}
-
-sub test_teardown {
-    vim_command('close!');
-}
-
-sub test_overloading :Tests {
+subtest test_overloading => in_window  {
     vim_append( 'a'..'d' );
     my $line = vim_line(3);
 
@@ -24,18 +19,18 @@ sub test_overloading :Tests {
     is $line->content => 'b', 'content';
     is "$line" => 'b', 'stringification';
     is 0+$line => 3, 'numification';
-}
+};
 
-sub test_attributes :Tests {
+subtest test_attributes => in_window  {
     vim_append('a'..'d');
     my $line = vim_line(3);
 
     is $line->index => 3, 'index';
     is $line->content => 'b', 'content';
     isa_ok $line->buffer => 'Vim::X::Buffer', 'buffer';
-}
+};
 
-sub test_clone :Tests {
+subtest test_clone => in_window  {
     vim_append('a'..'d');
     my $line = vim_line(3);
 
@@ -43,9 +38,9 @@ sub test_clone :Tests {
     is $line->index => 3, 'index';
     is $line->content => 'b', 'content';
     isa_ok $line->buffer => 'Vim::X::Buffer', 'buffer';
-}
+};
 
-sub test_content :Tests {
+subtest test_content => in_window  {
     vim_append('a'..'d');
     my $line = vim_line(3);
 
@@ -53,9 +48,9 @@ sub test_content :Tests {
     is "$line" => 'x', 'new content';
     is join( '', vim_lines ), 'axcd';
 
-}
+};
 
-sub test_append :Tests {
+subtest test_append => in_window  {
     vim_append('a'..'d');
     my $line = vim_line(3);
 
@@ -63,9 +58,9 @@ sub test_append :Tests {
     is "$line" => 'b', 'still same content';
     is join( '', vim_lines ), 'abxycd';
 
-}
+};
 
-sub test_search :Tests {
+subtest test_search => in_window  {
     vim_append('a'..'d');
     my $line = vim_line(3);
 
@@ -85,6 +80,5 @@ sub test_search :Tests {
     is 0+$line, 2;
 
     ok !$line->ff(sub { 0 } );
-}
+};
 
-1;

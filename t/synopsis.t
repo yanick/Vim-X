@@ -1,19 +1,14 @@
-package TestsFor::Vim::X::_synopsis;
-
 use strict;
 use warnings;
 
+use lib 't/lib';
+
+use Test::More;
+
+use VimTest;
 use Vim::X;
 
-use Test::Class::Moose extends => 'VimTest';
-
-sub test_setup {
-    vim_command('new');
-}
-
-sub test_teardown {
-    vim_command('close!');
-}
+plan tests => 1;
 
 our $last_msg;
 sub MostUsedVariable :Vim {
@@ -28,14 +23,14 @@ sub MostUsedVariable :Vim {
     vim_msg $last_msg = "variable name $most_used used $var{$most_used} times";
 }
 
-sub test_synopsis :Tests {
-    vim_cursor->append( "\$foo\n\$bar \$foo\n\$foo" );
+
+subtest synopsis => in_window {
+    vim_line->append( "\$foo\n\$bar \$foo\n\$foo" );
 
     is join( '', vim_lines ) => "\$foo\$bar \$foo\$foo";
 
     vim_command( 'call MostUsedVariable()' );
 
     is $last_msg => 'variable name foo used 3 times';
-}
+};
 
-1;

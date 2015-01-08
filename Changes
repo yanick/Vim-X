@@ -8,13 +8,19 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - new functions: vim_current_file(), vim_expand(), vim_input().
- - Addition of Vim::X::Cursor.
- - Saner handling of returns in list context.
 
  [NEW FEATURES]
 
  [STATISTICS]
+
+1.1.0 2015-01-08
+ [ENHANCEMENTS]
+ - new functions: vim_current_file(), vim_expand(), vim_input().
+ - Addition of Vim::X::Cursor.
+ - Saner handling of returns in list context.
+
+ [STATISTICS]
+ - code churn: 16 files changed, 392 insertions(+), 323 deletions(-)
 
 1.0.1 2014-11-26
  [BUG FIXES]

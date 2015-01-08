@@ -20,6 +20,7 @@ our @EXPORT = qw/
     vim_eval
     vim_range
     vim_line
+    vim_input
 vim_delete /;
 
 use Vim::X::Window;
@@ -373,6 +374,24 @@ sub vim_expand {
     my @mapped = map { vim_eval( "expand('$_')" ) } @_;
     return wantarray ? @mapped : $mapped[0];
 }
+
+=func vim_input( $prompt, $default, $completion_arg )
+
+Prompts the user for some value. The arguments are the same
+as for vim's own C<input>.
+
+=cut
+
+sub vim_input {
+    my @args = @_;
+    s/"/\\"/g for @args;
+
+    my $args = join ',', map { qq{"$_"} } @args;
+
+    vim_command( "let l = input($args)" );
+    return vim_eval("l");
+}
+
 =func vim_window( $i )
 
 Returns the L<Vim::X::Window> associated with the I<$i>th window. If I<$i>

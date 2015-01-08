@@ -8,7 +8,7 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - 'vim_current_file()'
+ - new functions: vim_current_file(), vim_expand(), vim_input()
 
  [NEW FEATURES]
 

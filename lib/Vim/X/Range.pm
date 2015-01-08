@@ -8,10 +8,7 @@ use overload
         my $self = shift;
         return $self->lines;
     },
-    '""' => sub {
-        my $self = shift;
-        return join "\n", $self->lines;
-    };
+    '""' => \&as_string;
 
 =attr from
 
@@ -67,6 +64,17 @@ sub replace {
     $self->_buffer->line($self->from)->content( @new );
 
     return $self;
+}
+
+=func as_string 
+
+Returns the range as a string.
+
+=cut
+
+sub as_string {
+    my $self = shift;
+    return join "\n", $self->lines;
 }
 
 

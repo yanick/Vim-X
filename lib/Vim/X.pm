@@ -55,7 +55,9 @@ sub Vim :ATTR_SUB {
     no strict 'refs';
     VIM::DoCommand(<<END);
 function $name($args) $range
-    perl ${class}::$name( split "\\n", scalar VIM::Eval('a:000'))
+    perl \$Vim::X::RETURN = ${class}::$name( split "\\n", scalar VIM::Eval('a:000'))
+    perl vim_command( "let vimx_return = '\$Vim::X::RETURN'" )
+    return vimx_return
 endfunction
 END
 
@@ -260,7 +262,10 @@ where C<vim> was launched, otherwise it'll be absolute.
 
 sub vim_current_file {
     my $symbol = '%' . ( ':p' x ! shift );
-    Path::Tiny::path( vim_expand( $symbol ) ); 
+
+    my $r = vim_expand( $symbol ) or return;
+
+    return Path::Tiny::path( $r ); 
 }
 
 =func vim_lines( @indexes )
@@ -305,7 +310,8 @@ Evals the given C<@expressions> and returns their results.
 =cut
 
 sub vim_eval {
-    return map { scalar VIM::Eval($_) } @_;
+    my @results = map { scalar VIM::Eval($_) } @_;
+    return wantarray ? @results : $results[0];
 }
 
 =func vim_range($from, $to)
@@ -340,7 +346,8 @@ Run the given 'ex' commands and return their results.
 =cut
 
 sub vim_command {
-    return map { VIM::DoCommand($_) } @_;
+    my @results = map { VIM::DoCommand($_) } @_;
+    return wantarray ? @results : $results[0];
 }
 
 =func vim_call( $function, @args )

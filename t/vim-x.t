@@ -10,7 +10,7 @@ use Path::Tiny;
 use VimTest;
 use Vim::X;
 
-plan tests => 6;
+plan tests => 7;
 
 isa_ok vim_window() => 'Vim::X::Window', "get the right object";
 

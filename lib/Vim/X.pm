@@ -13,6 +13,7 @@ our @EXPORT = qw/
     vim_func vim_prefix vim_msg vim_buffer vim_cursor vim_window
     vim_current_file
     vim_command
+    vim_expand
     vim_call
     vim_lines
     vim_append
@@ -359,6 +360,19 @@ sub vim_call {
     vim_command( $cmd );
 }
 
+=func vim_expand( @expressions )
+
+Returns the expansion of the passed expression(s).
+
+    my $current_file = vim_expand( '%' );
+    my ( $local, $absolute) = vim_expand( '%', '%:p' );
+
+=cut
+
+sub vim_expand {
+    my @mapped = map { vim_eval( "expand('$_')" ) } @_;
+    return wantarray ? @mapped : $mapped[0];
+}
 =func vim_window( $i )
 
 Returns the L<Vim::X::Window> associated with the I<$i>th window. If I<$i>

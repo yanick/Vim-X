@@ -1,6 +1,9 @@
 package Vim::X::Range;
+BEGIN {
+  $Vim::X::Range::AUTHORITY = 'cpan:YANICK';
+}
 # ABSTRACT: A range of lines in a Vim buffer
-
+$Vim::X::Range::VERSION = '1.1.0';
 use Moo;
 
 use overload 
@@ -10,18 +13,7 @@ use overload
     },
     '""' => \&as_string;
 
-=attr from
 
-The first line of the range.
-
-=cut
-
-=attr to
-
-The last line of the range. If not given, defaults to the same
-line as 'from'.
-
-=cut
 
 has [ qw/ from to / ] => (
     is => 'rw',
@@ -40,15 +32,6 @@ sub lines {
     return $self->_buffer->lines( $self->from..$self->to );
 }
 
-=func replace( @new_lines ) 
-
-Replaces the lines in the range with the provided new lines.
-If the new number of lines differs from the old one, the
-C<to> value of the object will be updated in consequence.
-
-Returns itself.
-
-=cut
 
 sub replace {
     my $self = shift;
@@ -66,11 +49,6 @@ sub replace {
     return $self;
 }
 
-=func as_string 
-
-Returns the range as a string.
-
-=cut
 
 sub as_string {
     my $self = shift;
@@ -114,6 +92,23 @@ sub to_ff {
 
 1;
 
+
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Vim::X::Range - A range of lines in a Vim buffer
+
+=head1 VERSION
+
+version 1.1.0
+
 =head1 DESCRIPTION
 
 Represents a range of lines in a buffer. Note that, just like
@@ -121,6 +116,40 @@ for L<Vim::X::Line>, the object stores the indexes of the range,
 so if the buffer after the object creation, it'll likely not 
 operate on the expected lines. Caveat emptor and all that.
 
-=cut
+=head1 ATTRIBUTES
 
-1;
+=head2 from
+
+The first line of the range.
+
+=head2 to
+
+The last line of the range. If not given, defaults to the same
+line as 'from'.
+
+=head1 FUNCTIONS
+
+=head2 replace( @new_lines ) 
+
+Replaces the lines in the range with the provided new lines.
+If the new number of lines differs from the old one, the
+C<to> value of the object will be updated in consequence.
+
+Returns itself.
+
+=head2 as_string 
+
+Returns the range as a string.
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

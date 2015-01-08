@@ -1,7 +1,0 @@
-^dist.ini
-^MANIFEST.SKIP
-Vim-X.*
-^\.gitignore
-^\.git
-^\.build
-

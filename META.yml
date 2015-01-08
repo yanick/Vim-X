@@ -1,0 +1,64 @@
+---
+abstract: 'Candy for Perl programming in Vim'
+author:
+  - 'Yanick Champoux <yanick@cpan.org>'
+build_requires:
+  File::Spec: '0'
+  IO::Handle: '0'
+  IPC::Open3: '0'
+  Module::Build: '0.28'
+  Test::More: '0.88'
+  lib: '0'
+  perl: '5.006'
+configure_requires:
+  Module::Build: '0.28'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 5.029, CPAN::Meta::Converter version 2.142690'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Vim-X
+provides:
+  Vim::X:
+    file: lib/Vim/X.pm
+    version: v1.1.0
+  Vim::X::Buffer:
+    file: lib/Vim/X/Buffer.pm
+    version: v1.1.0
+  Vim::X::Cursor:
+    file: lib/Vim/X/Cursor.pm
+    version: v1.1.0
+  Vim::X::Line:
+    file: lib/Vim/X/Line.pm
+    version: v1.1.0
+  Vim::X::Plugin::ResolveConflict:
+    file: lib/Vim/X/Plugin/ResolveConflict.pm
+    version: v1.1.0
+  Vim::X::Range:
+    file: lib/Vim/X/Range.pm
+    version: v1.1.0
+  Vim::X::Window:
+    file: lib/Vim/X/Window.pm
+    version: v1.1.0
+requires:
+  Carp: '0'
+  Exporter: '0'
+  Moo: '0'
+  Path::Tiny: '0'
+  Sub::Attribute: '0'
+  overload: '0'
+  parent: '0'
+  strict: '0'
+  warnings: '0'
+resources:
+  bugtracker: https://github.com/yanick/Vim-X/issues
+  homepage: https://github.com/yanick/Vim-X
+  repository: https://github.com/yanick/Vim-X.git
+version: 1.1.0
+x_author_pledge:
+  version: 1
+x_authority: cpan:YANICK
+x_contributors:
+  - 'Graham Todd <gtodd@iciti.ca>'
+  - 'Hernan Lopes <aut_hlopes@uolinc.com>'

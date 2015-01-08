@@ -11,6 +11,7 @@ use parent 'Exporter';
 
 our @EXPORT = qw/ 
     vim_func vim_prefix vim_msg vim_buffer vim_cursor vim_window
+    vim_current_file
     vim_command
     vim_call
     vim_lines
@@ -244,6 +245,19 @@ sub vim_buffer {
     my $buf = shift // $::curbuf->Number;
 
     return Vim::X::Buffer->new( index => $buf, _buffer => $::curbuf );
+}
+
+=func vim_current_file($local)
+
+Returns the file associated with the current buffer as a L<Path::Tiny>
+object. If C<$local> is true the path will be relative to the directory
+where C<vim> was launched, otherwise it'll be absolute.
+
+=cut
+
+sub vim_current_file {
+    my $symbol = '%' . ( ':p' x ! shift );
+    Path::Tiny::path( vim_expand( $symbol ) ); 
 }
 
 =func vim_lines( @indexes )

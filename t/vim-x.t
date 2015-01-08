@@ -5,10 +5,12 @@ use lib 't/lib';
 
 use Test::More;
 
+use Path::Tiny;
+
 use VimTest;
 use Vim::X;
 
-plan tests => 5;
+plan tests => 6;
 
 isa_ok vim_window() => 'Vim::X::Window', "get the right object";
 
@@ -41,5 +43,14 @@ subtest vim_line => in_window  {
     vim_append( 'a'..'d' );
     is vim_line() => '', 'cursor, so first line';
     is vim_line(3) => 'b', 'line 3';
+};
+
+subtest vim_current_file => in_window {
+    is vim_current_file() => undef, 'buffer is not saved yet';
+
+    vim_command( "write! t/buffer" );
+
+    like vim_current_file() => qr't/buffer$', 'file exists';
+    is vim_current_file(1) => 't/buffer', 'localized';
 };
 

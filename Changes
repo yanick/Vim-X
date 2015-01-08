@@ -8,6 +8,7 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - 'vim_current_file()'
 
  [NEW FEATURES]
 

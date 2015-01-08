@@ -29,17 +29,20 @@ sub buffer {
 
 =func cursor() 
 
-Returns the cursor position in the window. 
-In list context, returns the I<(line,colum)> coordinates. In scalar
-context, the line as a L<Vim::X::Line> object.
+Returns the cursor position in the window as a L<Vim::X::Cursor> object. 
 
 =cut
 
 sub cursor {
     my $win = shift;
     my @cursor = $win->_window->Cursor;
-    return wantarray ? @cursor
-        : Vim::X::Line->new( buffer => $win->buffer, index => $cursor[0] );
+
+    return Vim::X::Cursor->new(
+        window => $win,
+        line => Vim::X::Line->new( buffer => $win->buffer, index =>
+            $cursor[0]),
+        col => $cursor[1]
+    );
 }
 
 1;

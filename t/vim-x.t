@@ -14,6 +14,17 @@ plan tests => 6;
 
 isa_ok vim_window() => 'Vim::X::Window', "get the right object";
 
+subtest test_vim_cursor => in_window {
+    my $x = vim_cursor();
+
+    isa_ok $x => 'Vim::X::Cursor';
+
+    isa_ok $x->line => 'Vim::X::Line';
+
+    is $x->line->index => 1;
+    is $x->col => 0;
+
+};
 
 subtest vim_append => sub  {
     vim_append( 'a'..'c' );

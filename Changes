@@ -8,7 +8,8 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - new functions: vim_current_file(), vim_expand(), vim_input()
+ - new functions: vim_current_file(), vim_expand(), vim_input().
+ - Addition of Vim::X::Cursor.
 
  [NEW FEATURES]
 

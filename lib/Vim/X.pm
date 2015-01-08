@@ -25,6 +25,7 @@ vim_delete /;
 
 use Vim::X::Window;
 use Vim::X::Buffer;
+use Vim::X::Cursor;
 use Vim::X::Line;
 
 sub import {
@@ -281,7 +282,7 @@ If I<$index> is not given, returns the line at the cursor.
 =cut
 
 sub vim_line {
-    @_ ? vim_buffer->line(shift) : vim_cursor();
+    @_ ? vim_buffer->line(shift) : vim_cursor()->line;
 }
 
 =func vim_append(@lines) 
@@ -294,7 +295,7 @@ consequence.
 =cut
 
 sub vim_append {
-    vim_cursor()->append(@_);
+    vim_cursor()->line->append(@_);
 }
 
 =func vim_eval(@expressions)
@@ -405,7 +406,7 @@ sub vim_window {
 
 =func vim_cursor
 
-Returns the L<Vim::X::Line> associated with the position of the cursor
+Returns the L<Vim::X::Cursor> associated with the position of the cursor
 in the current window.
 
 =cut

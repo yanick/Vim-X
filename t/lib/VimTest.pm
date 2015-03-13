@@ -13,11 +13,20 @@ BEGIN {
     exit;
 END
 
-    exec 'vim', qw/ -V -u NONE -i NONE -N -e -s /,
-        '-c' => 'perl unshift @INC, "lib"', 
-        '-c' => 'perl unshift @INC, "t/lib"', 
-        '-c', "perl do '$0'",
-        '-c', "qall!";
+    if ($^O ne 'MSWin32') {
+        exec 'vim', qw/ -V -u NONE -i NONE -N -e -s /,
+            '-c' => 'perl unshift @INC, "lib"',
+            '-c' => 'perl unshift @INC, "t/lib"',
+            '-c', "perl do '$0'",
+            '-c', "qall!";
+    }
+    else {
+        exec 'vim', qw/ -V -u NONE -i NONE -N -e -s /,
+            '-c' => q{"perl unshift @INC, 'lib'"},
+            '-c' => q{"perl unshift @INC, 't/lib'"},
+            '-c', qq{"perl do '$0'"},
+            '-c', "qall!";
+    }
 }
 
 use parent 'Exporter';
@@ -27,7 +36,7 @@ our @EXPORT = ( 'in_window' );
 
 sub in_window (&) {
     my $code = shift;
-    sub { 
+    sub {
         vim_command('new');
         eval { ::test_setup() };
         $code->();

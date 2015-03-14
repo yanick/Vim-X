@@ -8,11 +8,17 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - Fix test failures on Windows. (GH#3, Sinan Unur)
 
  [NEW FEATURES]
 
  [STATISTICS]
+
+1.2.0 2015-03-13
+ [ENHANCEMENTS]
+ - Fix test failures on Windows. (GH#3, Sinan Unur)
+
+ [STATISTICS]
+ - code churn: 3 files changed, 25 insertions(+), 9 deletions(-)
 
 1.1.0 2015-01-08
  [ENHANCEMENTS]

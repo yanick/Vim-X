@@ -1,6 +1,9 @@
 package Vim::X::Cursor;
+BEGIN {
+  $Vim::X::Cursor::AUTHORITY = 'cpan:YANICK';
+}
 # ABSTRACT: A window cursor in Vim
-
+$Vim::X::Cursor::VERSION = '1.2.0';
 use strict;
 use warnings;
 
@@ -9,11 +12,6 @@ use Carp;
 
 use Moo;
 
-=func window()
-
-Returns the  L<Vim::X::Window> of the cursor.
-
-=cut
 
 has window => (
     is => 'ro',
@@ -34,6 +32,35 @@ sub append {
 
 1;
 
+__END__
 
+=pod
 
+=encoding UTF-8
 
+=head1 NAME
+
+Vim::X::Cursor - A window cursor in Vim
+
+=head1 VERSION
+
+version 1.2.0
+
+=head1 FUNCTIONS
+
+=head2 window()
+
+Returns the  L<Vim::X::Window> of the cursor.
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2014 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

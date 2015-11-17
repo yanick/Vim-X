@@ -20,8 +20,20 @@ has window => (
     required => 1,
 );
 
-has line => ( is => 'ro', required => 1 );
-has col  => ( is => 'ro', required => 1 );
+has line => ( is => 'rw', required => 1 );
+has col  => ( is => 'rw', required => 1 );
+
+before line => sub {
+    return unless @_ == 2;
+    my( $cursor, $line ) = @_;
+    $cursor->window->_window->Cursor( $line, $cursor->col );
+};
+
+before col => sub {
+    return unless @_ == 2;
+    my( $cursor, $col ) = @_;
+    $cursor->window->_window->Cursor( $cursor->line, $col );
+};
 
 sub append {
     my( $self, $stuff ) = @_;

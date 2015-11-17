@@ -8,6 +8,7 @@ Revision history for Vim-X
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - col/line of cursor can now be modified.
 
  [NEW FEATURES]
 

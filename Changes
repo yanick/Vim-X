@@ -1,81 +1,86 @@
 Revision history for Vim-X
 
 {{$NEXT}}
- [API CHANGES]
+  [ API CHANGES ]
 
- [BUG FIXES]
+  [ BUG FIXES ]
 
- [DOCUMENTATION]
+  [ DOCUMENTATION ]
 
- [ENHANCEMENTS]
- - col/line of cursor can now be modified.
+  [ ENHANCEMENTS ]
 
- [NEW FEATURES]
+  [ NEW FEATURES ]
 
- [STATISTICS]
+  [ STATISTICS ]
+
+1.3.0 2015-11-16
+  [ ENHANCEMENTS ]
+    - col/line of cursor can now be modified.
+
+  [ STATISTICS ]
+    - code churn: 3 files changed, 25 insertions(+), 4 deletions(-)
 
 1.2.0 2015-03-13
- [ENHANCEMENTS]
- - Fix test failures on Windows. (GH#3, Sinan Unur)
+  [ ENHANCEMENTS ]
+    - Fix test failures on Windows. (GH#3, Sinan Unur)
 
- [STATISTICS]
- - code churn: 3 files changed, 25 insertions(+), 9 deletions(-)
+  [ STATISTICS ]
+    - code churn: 3 files changed, 25 insertions(+), 9 deletions(-)
 
 1.1.0 2015-01-08
- [ENHANCEMENTS]
- - new functions: vim_current_file(), vim_expand(), vim_input().
- - Addition of Vim::X::Cursor.
- - Saner handling of returns in list context.
+  [ ENHANCEMENTS ]
+    - new functions: vim_current_file(), vim_expand(), vim_input().
+    - Addition of Vim::X::Cursor.
+    - Saner handling of returns in list context.
 
- [STATISTICS]
- - code churn: 16 files changed, 392 insertions(+), 323 deletions(-)
+  [ STATISTICS ]
+    - code churn: 16 files changed, 392 insertions(+), 323 deletions(-)
 
 1.0.1 2014-11-26
- [BUG FIXES]
- - 'vim_eval' wasn't exported.
+  [ BUG FIXES ]
+    - 'vim_eval' wasn't exported.
 
- [DOCUMENTATION]
- - Synopsis typo fix. (GH#2, Graham Todd)
+  [ DOCUMENTATION ]
+    - Synopsis typo fix. (GH#2, Graham Todd)
 
- [STATISTICS]
- - code churn: 4 files changed, 17 insertions(+), 10 deletions(-)
+  [ STATISTICS ]
+    - code churn: 4 files changed, 17 insertions(+), 10 deletions(-)
 
 1.0.0 2014-05-07
- [API CHANGES]
- - vim_range() now returns a Vim::X::Range object.
+  [ API CHANGES ]
+    - vim_range() now returns a Vim::X::Range object.
 
- [STATISTICS]
- - code churn: 7 files changed, 210 insertions(+), 11 deletions(-)
+  [ STATISTICS ]
+    - code churn: 7 files changed, 210 insertions(+), 11 deletions(-)
 
 0.3.0 2014-04-27
- [BUG FIXES]
- - Removed a spurious warning. (GH#1, Hernan Lopes)
+  [ BUG FIXES ]
+    - Removed a spurious warning. (GH#1, Hernan Lopes)
 
- [ENHANCEMENTS]
- - Add source_function_dir().
+  [ ENHANCEMENTS ]
+    - Add source_function_dir().
 
- [STATISTICS]
- - code churn: 4 files changed, 99 insertions(+), 18 deletions(-)
+  [ STATISTICS ]
+    - code churn: 4 files changed, 99 insertions(+), 18 deletions(-)
 
 0.2.0 2014-04-08
- [BUG FIXES]
- - Tests skipped if vim not found, or not compiled with perl support.
+  [ BUG FIXES ]
+    - Tests skipped if vim not found, or not compiled with perl support.
 
- [ENHANCEMENTS]
- - Added 'load_function_dir()' loading mechanism.
+  [ ENHANCEMENTS ]
+    - Added 'load_function_dir()' loading mechanism.
 
- [STATISTICS]
- - code churn: 3 files changed, 106 insertions(+), 32 deletions(-)
+  [ STATISTICS ]
+    - code churn: 3 files changed, 106 insertions(+), 32 deletions(-)
 
 0.1.0 2014-04-07
- - Adding tests, and pushing as stable.
+  - Adding tests, and pushing as stable.
 
- [STATISTICS]
- - code churn: 11 files changed, 97 insertions(+), 28 deletions(-)
+  [ STATISTICS ]
+    - code churn: 11 files changed, 97 insertions(+), 28 deletions(-)
 
 0.0.1_0 2014-04-02
- - First version, unleashed on an unsuspecting world.
+  - First version, unleashed on an unsuspecting world.
 
- [STATISTICS]
- - code churn: 12 files changed, 82 insertions(+), 60 deletions(-)
-
+  [ STATISTICS ]
+    - code churn: 12 files changed, 82 insertions(+), 60 deletions(-)

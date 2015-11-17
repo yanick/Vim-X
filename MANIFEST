@@ -30,7 +30,8 @@ lib/Vim/X/Plugin/ResolveConflict.pm
 lib/Vim/X/Range.pm
 lib/Vim/X/Window.pm
 t/00-compile.t
-t/000-report-versions-tiny.t
+t/00-report-prereqs.dd
+t/00-report-prereqs.t
 t/TestFor/lib/Vim/X/Line.pm
 t/lib/VimTest.pm
 t/line.t
@@ -38,4 +39,5 @@ t/range.t
 t/synopsis.t
 t/vim-x.t
 t/vim/Vim/X/Line.pm
+xt/release/pause-permissions.t
 xt/release/unused-vars.t

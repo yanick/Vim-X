@@ -1,4 +1,5 @@
 AUTHOR_PLEDGE
+CODE_OF_CONDUCT.md
 CONTRIBUTORS
 Changes
 INSTALL
@@ -7,7 +8,6 @@ MANIFEST
 META.json
 META.yml
 Makefile.PL
-README
 README.mkdn
 SIGNATURE
 contrib/MyMooVim.pm
@@ -39,5 +39,4 @@ t/range.t
 t/synopsis.t
 t/vim-x.t
 t/vim/Vim/X/Line.pm
-xt/release/pause-permissions.t
 xt/release/unused-vars.t

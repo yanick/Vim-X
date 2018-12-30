@@ -14,7 +14,7 @@ BEGIN {
 END
 
     if ($^O ne 'MSWin32') {
-        exec 'vim', qw/ -V -u NONE -i NONE -N -e -s /,
+        exec 'vim', qw/ -X -V -u NONE -i NONE -N -e -s /,
             '-c' => 'perl unshift @INC, "lib"',
             '-c' => 'perl unshift @INC, "t/lib"',
             '-c', "perl do '$0'",
